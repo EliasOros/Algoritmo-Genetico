@@ -6,7 +6,8 @@ Se usaran 2 librerias para la ejecucion de este programa
       Se instalaran las siguientes librerias
 
       pip install pandas
-        pip install openpyxl
+      
+      pip install openpyxl
 
 
   
@@ -14,6 +15,7 @@ Se usaran 2 librerias para la ejecucion de este programa
       Se instalaran las siguientes librerias
 
     pip install networkx
-        pip install matplotlib
+    
+    pip install matplotlib
 
 
