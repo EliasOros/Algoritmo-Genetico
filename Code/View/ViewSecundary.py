@@ -39,85 +39,31 @@ class ViewSecundary:
         self.G_min.add_node(name, pos=(x, y))
         self.G_max.add_node(name, pos=(x, y))
    
-   
     def generate_lines_min(self, cityA, cityB):
+        self.G_min.add_edge(cityA, cityB,line_width=1)
         
-        self.G_min.add_edge(cityA, cityB)
-        self.canvas_secundary_min.get_tk_widget().destroy()
-        self.canvas_secundary_min = FigureCanvasTkAgg(self.view_secundary.draw_graph_in_figure_min(self.view_secundary.get_graph_min()), master=self.frame_min)
-        self.canvas_secundary_min.get_tk_widget().pack()
-        
+
     def generate_lines_max(self, cityA, cityB):
+        self.G_max.add_edge(cityA, cityB,line_width=1)
         
-        self.G_max.add_edge(cityA, cityB)
-        self.canvas_secundary_max.get_tk_widget().destroy()
-        self.canvas_secundary_max = FigureCanvasTkAgg(self.view_secundary.draw_graph_in_figure_max(self.view_secundary.get_graph_max()), master=self.frame_max)
-        self.canvas_secundary_max.get_tk_widget().pack()
-        
-    
+
+    def draw_graph_in_figure_min(self, G):
+        self.fig, ax = plt.subplots()
+        ax.imshow(self.background_image, extent=[0, 5, -2, 2])
+        nx.draw(G, self.pos, with_labels=True, node_color='blue', node_size=12, font_size=5, font_color='black', edge_color='g')
+        return self.fig
 
     def draw_graph_in_figure_max(self, G):
         self.fig, ax = plt.subplots()
         ax.imshow(self.background_image, extent=[0, 5, -2, 2])
-        nx.draw(G, self.pos, with_labels=True, node_color='blue', node_size=8, font_size=5, font_color='black', edge_color='g')
+        nx.draw(G, self.pos, with_labels=True, node_color='blue', node_size=12, font_size=5, font_color='black', edge_color='r')
         return self.fig
-    
-    def draw_graph_in_figure_min(self, G):
-        self.fig, ax = plt.subplots()
-        ax.imshow(self.background_image, extent=[0, 5, -2, 2])
-        nx.draw(G, self.pos, with_labels=True, node_color='blue', node_size=8, font_size=5, font_color='black', edge_color='r')
-        return self.fig
-    
+
     def get_graph_min(self):
         return self.G_min
-    
+
     def get_graph_max(self):
         return self.G_max
     
- 
-
-
-   
-   
-    def generate_lines_min(self, cityA, cityB):
-        
-        self.G_min.add_edge(cityA, cityB)
-        print("Generando línea entre", cityA, "y", cityB)
-        
-    def generate_lines_max(self, cityA, cityB):
-        
-        self.G_max.add_edge(cityA, cityB)
-        print("Generando línea entre", cityA, "y", cityB)
-        
-    
-
-    def draw_graph_in_figure_max(self, G):
-        # Dibuja el grafo con la imagen de fondo
-        self.fig, ax = plt.subplots()
-        ax.imshow(self.background_image, extent=[0, 5, -2, 2])
-
-        # Dibuja los nodos
-        nx.draw(G, self.pos, with_labels=True, node_color='blue', node_size=8, font_size=5, font_color='black',edge_color='r')
-
-        # No muestres el gráfico aquí, solo devuélvelo
-        return self.fig
-    
-    def draw_graph_in_figure_min(self, G):
-        # Dibuja el grafo con la imagen de fondo
-        self.fig, ax = plt.subplots()
-        ax.imshow(self.background_image, extent=[0, 5, -2, 2])
-
-        # Dibuja los nodos
-        nx.draw(G, self.pos, with_labels=True, node_color='blue', node_size=8, font_size=5, font_color='black',edge_color='g')
-
-        # No muestres el gráfico aquí, solo devuélvelo
-        return self.fig
-    
-    def get_graph_min(self):
-        return self.G_min
-    
-    def get_graph_max(self):
-        return self.G_max
-    
- 
-
+    def close_figures(self):
+        plt.close('all')

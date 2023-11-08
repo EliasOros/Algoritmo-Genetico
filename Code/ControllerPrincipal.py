@@ -1,16 +1,17 @@
 from Model.ModelPrincipal import ModelPrincipal
 from View.ViewPrincipal import ViewPrincipal
 import threading
+
 class ControllerPrincipal:
-    ciudad_elegida = ""
+    
 
     def __init__(self, modelPrincipal, view_principal):
         self.model = modelPrincipal
         self.view_principal = view_principal
-
+        self.ciudad_elegida = ""
         self.thread1 = None
         self.thread2 = None
-        print("hola")
+        
 
     def iniciar(self):
         self.view_principal.iniciar()

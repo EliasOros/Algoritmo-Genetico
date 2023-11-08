@@ -91,6 +91,7 @@ class ViewPrincipal:
 
     def on_closing(self):
         self.root.destroy()
+        self.view_secundary.close_figures()
 
     def obtenerCiudad(self):
         city = str(self.comboBox_ciudades.get())
