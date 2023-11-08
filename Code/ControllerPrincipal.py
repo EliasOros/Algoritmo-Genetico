@@ -10,6 +10,7 @@ class ControllerPrincipal:
 
         self.thread1 = None
         self.thread2 = None
+        print("hola")
 
     def iniciar(self):
         self.view_principal.iniciar()
