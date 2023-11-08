@@ -2,46 +2,101 @@ import pandas as pd
 
 class ModelPrincipal:
     
-    def __init__(self):
-        self.cities = [
-            "Ciudad de México",
-            "Guadalajara",
-            "Ciudad Juarez",
-            "Tijuana",
-            "Zapopan",
-            "Monterrey",
-            "Chihuahua",
-            "Merida",
-            "San Luis Potosi",
-            "Aguascalientes",
-            "Hermosillo",
-            "Saltillo",
-            "Mexicali",
-            "Culiacan",
-            "Acapulco de Juarez"
-        ]
-        
-        self.recorrdioCorto = []
-        self.recorrdioLargo = []
-        
-        # Cargar los datos desde el archivo Excel
-        self.df = pd.read_excel('Code/Others/Distances.xlsx', header=0, index_col=0)
+    ciudades_min = [
+    "Ciudad de México",
+    "Guadalajara",
+    "Ciudad Juárez",
+    "Tijuana",
+    "Zapopan",
+    "Monterrey",
+    "Chihuahua",
+    "Mérida",
+    "San Luis Potosí",
+    "Aguascalientes",
+    "Hermosillo",
+    "Saltillo",
+    "Mexicali",
+    "Culiacán",
+    "Acapulco de Juárez"
+    ]
     
-    def hola(self):
-        
-        # Mostrar las distancias entre dos ciudades
-        distancia_AB = self.df.loc['Ciudad A', 'Ciudad B']
-        print(f"Distancia entre Ciudad A y Ciudad B: {distancia_AB} km")
+    
+    ciudades_max = [
+    "Ciudad de México",
+    "Guadalajara",
+    "Ciudad Juárez",
+    "Tijuana",
+    "Zapopan",
+    "Monterrey",
+    "Chihuahua",
+    "Mérida",
+    "San Luis Potosí",
+    "Aguascalientes",
+    "Hermosillo",
+    "Saltillo",
+    "Mexicali",
+    "Culiacán",
+    "Acapulco de Juárez"
+    ]
+    
 
-        # Encontrar la ciudad más cercana a una ciudad específica
-        ciudad_origen = 'Ciudad A'
-        ciudades_cercanas = self.df[ciudad_origen][self.df[ciudad_origen] > 0].idxmin()
-        print(f"La ciudad más cercana a {ciudad_origen} es {ciudades_cercanas}.")
+    ruta_min = []
+    ruta_max = []
+    
+    
+    def obtenerMin(self,origen,df):
+               
+        if(len(self.ciudades_min)!=1):
+            ciudad_origen = origen
+            ciudades_cercanas = df[ciudad_origen][(df[ciudad_origen] > 0)].idxmin()
+            print(f"La ciudad más cercana a {ciudad_origen} es {ciudades_cercanas}.")
+            self.ciudades_min.remove(ciudad_origen)
+            self.ruta_min.append(ciudad_origen)
+          
+            df = df.drop(ciudad_origen,axis='index')
 
-        # Calcular la distancia promedio a todas las ciudades
-        distancia_promedio = self.df.mean().mean()
-        print(f"Distancia promedio entre todas las ciudades: {distancia_promedio} km")
+            a = self.obtenerMin(ciudades_cercanas,df)
+            return a
+        else:
+            self.ruta_min.append(origen)
+
+            return origen
         
-    def minimo():
+    def obtenerMax(self,origen,df):
         
-        print("gola")
+        if(len(self.ciudades_max)!=1):
+            ciudad_origen = origen
+            ciudades_cercanas = df[ciudad_origen][(df[ciudad_origen] > 0)].idxmax()
+            print(f"La ciudad más lejana a {ciudad_origen} es {ciudades_cercanas}.")
+            
+                    
+            self.ciudades_max.remove(ciudad_origen)
+            self.ruta_max.append(ciudad_origen)
+                    
+            df = df.drop(ciudad_origen,axis='index')
+            
+            a = self.obtenerMax(ciudades_cercanas,df)
+            return a
+        else:
+            self.ruta_max.append(origen)
+
+            return origen
+    def minimo(self, origen):
+        # Cargar los datos desde el archivo Excel
+        df = pd.read_excel('code/Others/Distances.xlsx', header=0, index_col=0)
+        ciudad_final = self.obtenerMin(origen,df)
+        print(ciudad_final)
+        print("ruta minimo",self.ruta_min)
+        
+        return self.ruta_min
+        
+
+    def maximo(self, origen):
+        # Cargar los datos desde el archivo Excel
+        df = pd.read_excel('code/Others/Distances.xlsx', header=0, index_col=0)
+        ciudad_final = self.obtenerMax(origen,df)
+        print(ciudad_final)
+        print("ruta maximo",self.ruta_max)
+        
+        return self.ruta_max
+        
