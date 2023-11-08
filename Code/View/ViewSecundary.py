@@ -1,7 +1,7 @@
 import networkx as nx
 import matplotlib.pyplot as plt
 
-class View:
+class ViewSecundary:
     def __init__(self):
         # Crea un grafo vacío
         self.G = nx.Graph()
@@ -27,7 +27,8 @@ class View:
         self.pos = nx.get_node_attributes(self.G, 'pos')
 
         # Carga la imagen de fondo
-        self.background_image = plt.imread("Others/Images/republica.jpg")
+        self.background_image = plt.imread("Code/Others/Images/republica.jpg")
+        print("Imagen cargada correctamente")
 
     def add_city(self, name, x, y):
         self.G.add_node(name, pos=(x, y))
@@ -35,7 +36,7 @@ class View:
     def generate_lines(self, cityA, cityB):
         self.G.add_edge(cityA, cityB)
 
-    def draw_graph(self):
+    def draw_graph_in_figure(self):
         # Dibuja el grafo con la imagen de fondo
         fig, ax = plt.subplots()
         ax.imshow(self.background_image, extent=[0, 5, -2, 2])
@@ -43,11 +44,10 @@ class View:
         # Dibuja los nodos
         nx.draw(self.G, self.pos, with_labels=True, node_color='blue', node_size=8, font_size=5, font_color='black')
 
-        # Muestra el gráfico
-        plt.axis('off')
-        plt.show()
+        # No muestres el gráfico aquí, solo devuélvelo
+        return fig
 
 if __name__ == "__main__":
-    view = View()
+    view = ViewSecundary()
     view.generate_lines("Ciudad de México", "Guadalajara")
-    view.draw_graph()
+    view.draw_graph_in_figure
