@@ -39,24 +39,28 @@ class ViewSecundary:
         self.G_min.add_node(name, pos=(x, y))
         self.G_max.add_node(name, pos=(x, y))
    
-    def generate_lines_min(self, cityA, cityB):
-        self.G_min.add_edge(cityA, cityB,line_width=1)
-        
+    def generate_lines_min(self, cityA, cityB, text):
+        self.G_min.add_edge(cityA, cityB,line_width=1, label=text)  
 
-    def generate_lines_max(self, cityA, cityB):
-        self.G_max.add_edge(cityA, cityB,line_width=1)
+    def generate_lines_max(self, cityA, cityB,text):
+        self.G_max.add_edge(cityA, cityB,line_width=1,label=text)
         
+     
 
     def draw_graph_in_figure_min(self, G):
         self.fig, ax = plt.subplots()
         ax.imshow(self.background_image, extent=[0, 5, -2, 2])
-        nx.draw(G, self.pos, with_labels=True, node_color='blue', node_size=12, font_size=5, font_color='black', edge_color='g')
+        edge_labels = nx.get_edge_attributes(self.G_min, 'label')
+        nx.draw(self.G_min, self.pos, with_labels=True, node_color='blue', node_size=12, font_size=5, font_color='black', edge_color='g')
+        nx.draw_networkx_edge_labels(self.G_min, self.pos, edge_labels=edge_labels, font_size=6, font_color='red')
         return self.fig
 
     def draw_graph_in_figure_max(self, G):
         self.fig, ax = plt.subplots()
         ax.imshow(self.background_image, extent=[0, 5, -2, 2])
-        nx.draw(G, self.pos, with_labels=True, node_color='blue', node_size=12, font_size=5, font_color='black', edge_color='r')
+        edge_labels = nx.get_edge_attributes(self.G_max, 'label')
+        nx.draw(self.G_max, self.pos, with_labels=True, node_color='blue', node_size=12, font_size=5, font_color='black', edge_color='r')
+        nx.draw_networkx_edge_labels(self.G_max, self.pos, edge_labels=edge_labels, font_size=6, font_color='red')
         return self.fig
 
     def get_graph_min(self):

@@ -124,16 +124,18 @@ class ViewPrincipal:
         # Vuelve a crear el lienzo con el nuevo grafo máximo
         self.crearVentanaConGrafo_max()
         
-    def generate_lines_min(self, ciudad_origen, ciudad_destino):
-        self.view_secundary.generate_lines_min(ciudad_origen, ciudad_destino)
+    def generate_lines_min(self, ciudad_origen, ciudad_destino,text):
+        self.view_secundary.generate_lines_min(ciudad_origen, ciudad_destino,text)
         G = self.view_secundary.get_graph_min()
         self.canvas_secundary_min.get_tk_widget().destroy()
         self.canvas_secundary_min = FigureCanvasTkAgg(self.view_secundary.draw_graph_in_figure_min(G), master=self.frame_min)
         self.canvas_secundary_min.get_tk_widget().pack()
 
-    def generate_lines_max(self, ciudad_origen, ciudad_destino):
-        self.view_secundary.generate_lines_max(ciudad_origen, ciudad_destino)
+    def generate_lines_max(self, ciudad_origen, ciudad_destino,text):
+        self.view_secundary.generate_lines_max(ciudad_origen, ciudad_destino,text)
         G = self.view_secundary.get_graph_max()
         self.canvas_secundary_max.get_tk_widget().destroy()
         self.canvas_secundary_max = FigureCanvasTkAgg(self.view_secundary.draw_graph_in_figure_max(G), master=self.frame_max)
         self.canvas_secundary_max.get_tk_widget().pack()
+        
+  

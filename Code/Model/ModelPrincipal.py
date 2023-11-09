@@ -43,6 +43,11 @@ class ModelPrincipal:
     ruta_min = []
     ruta_max = []
     
+    distancias_min = []
+    distancias_max = []
+    distancia_final_min=""
+    distancia_final_max=""
+    
     
     def obtenerMin(self,origen,df):
                
@@ -50,17 +55,31 @@ class ModelPrincipal:
             ciudad_origen = origen
             ciudades_cercanas = df[ciudad_origen][(df[ciudad_origen] > 0)].idxmin()
             print(f"La ciudad más cercana a {ciudad_origen} es {ciudades_cercanas}.")
+            
+            # Mostrar las distancias entre dos ciudades
+            distancia_AB = df.loc[ciudad_origen, ciudades_cercanas]
+            print(f"Distancia entre Ciudad A y Ciudad B: {distancia_AB} km")
+            
             self.ciudades_min.remove(ciudad_origen)
             self.ruta_min.append(ciudad_origen)
-          
+            self.distancias_min.append(distancia_AB)
+        
+         
             df = df.drop(ciudad_origen,axis='index')
 
             a = self.obtenerMin(ciudades_cercanas,df)
+            
+            self.distancia_final_min = (df.loc[self.ruta_min[-1],ciudad_origen])
+            #print(f"Distancia entre final e inicio es : {self.distancia_final_min} km")
             return a
+        
         else:
             self.ruta_min.append(origen)
 
             return origen
+        
+       
+        
         
     def obtenerMax(self,origen,df):
         
@@ -68,14 +87,20 @@ class ModelPrincipal:
             ciudad_origen = origen
             ciudades_cercanas = df[ciudad_origen][(df[ciudad_origen] > 0)].idxmax()
             print(f"La ciudad más lejana a {ciudad_origen} es {ciudades_cercanas}.")
-            
+            # Mostrar las distancias entre dos ciudades
+            distancia_AB = df.loc[ciudad_origen, ciudades_cercanas]
+            print(f"Distancia entre Ciudad A y Ciudad B: {distancia_AB} km")
                     
             self.ciudades_max.remove(ciudad_origen)
             self.ruta_max.append(ciudad_origen)
+            self.distancias_max.append(distancia_AB)
+
                     
             df = df.drop(ciudad_origen,axis='index')
             
             a = self.obtenerMax(ciudades_cercanas,df)
+            
+            self.distancia_final_max = (df.loc[self.ruta_max[-1],ciudad_origen])
             return a
         else:
             self.ruta_max.append(origen)
