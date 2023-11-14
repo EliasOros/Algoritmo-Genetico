@@ -2,7 +2,7 @@ import pandas as pd
 
 class ModelPrincipal:
     
-    ciudades_min = [
+    ciudades = [
     "Ciudad de México",
     "Guadalajara",
     "Ciudad Juárez",
@@ -20,26 +20,6 @@ class ModelPrincipal:
     "Acapulco de Juárez"
     ]
     
-    
-    ciudades_max = [
-    "Ciudad de México",
-    "Guadalajara",
-    "Ciudad Juárez",
-    "Tijuana",
-    "Zapopan",
-    "Monterrey",
-    "Chihuahua",
-    "Mérida",
-    "San Luis Potosí",
-    "Aguascalientes",
-    "Hermosillo",
-    "Saltillo",
-    "Mexicali",
-    "Culiacán",
-    "Acapulco de Juárez"
-    ]
-    
-
     ruta_min = []
     ruta_max = []
     
@@ -48,80 +28,90 @@ class ModelPrincipal:
     distancia_final_min=""
     distancia_final_max=""
     
+    ciudades_min = ciudades.copy()
+    ciudades_max = ciudades.copy()
     
-    def obtenerMin(self,origen,df):
+    mensaje_min=""
+    mensaje_max=""
+    
+    def obtencionDistancias(self,ciudad_origen_min,df_min,ciudad_origen_max,df_max):      
                
-        if(len(self.ciudades_min)!=1):
-            ciudad_origen = origen
-            ciudades_cercanas = df[ciudad_origen][(df[ciudad_origen] > 0)].idxmin()
-            print(f"La ciudad más cercana a {ciudad_origen} es {ciudades_cercanas}.")
+        if(len(self.ciudades_min)!=1 and len(self.ciudades_max)!=1):
+                       
+            ciudades_cercanas = df_min[ciudad_origen_min][df_min[ciudad_origen_min]>0].idxmin()
+            ciudades_lejanas = df_max[ciudad_origen_max][df_max[ciudad_origen_max]>0].idxmax()
             
-            # Mostrar las distancias entre dos ciudades
-            distancia_AB = df.loc[ciudad_origen, ciudades_cercanas]
-            print(f"Distancia entre Ciudad A y Ciudad B: {distancia_AB} km")
+            distancia_AB_min = df_min.loc[ciudad_origen_min, ciudades_cercanas]
+            distancia_AB_max = df_max.loc[ciudad_origen_max, ciudades_lejanas]
             
-            self.ciudades_min.remove(ciudad_origen)
-            self.ruta_min.append(ciudad_origen)
-            self.distancias_min.append(distancia_AB)
-        
-         
-            df = df.drop(ciudad_origen,axis='index')
-
-            a = self.obtenerMin(ciudades_cercanas,df)
+            self.mensaje_min += (f"La ciudad mas cercana de  {ciudad_origen_min} es {ciudades_cercanas} con {distancia_AB_min} Km de distancia\n\n")
+            self.mensaje_max +=(f"La ciudad mas lejana de  {ciudad_origen_max} es {ciudades_lejanas} con {distancia_AB_max} Km de distancia\n\n")
             
-            self.distancia_final_min = (df.loc[self.ruta_min[-1],ciudad_origen])
-            #print(f"Distancia entre final e inicio es : {self.distancia_final_min} km")
-            return a
-        
+            self.ciudades_min.remove(ciudad_origen_min)
+            self.ciudades_max.remove(ciudad_origen_max)
+            
+            self.ruta_min.append(ciudad_origen_min)
+            self.ruta_max.append(ciudad_origen_max)
+            
+            self.distancias_min.append(distancia_AB_min)
+            self.distancias_max.append(distancia_AB_max)
+            
+            df_min = df_min.drop(ciudad_origen_min,axis='index')
+            df_max= df_max.drop(ciudad_origen_max,axis='index')
+            
+            self.obtencionDistancias(ciudades_cercanas,df_min,ciudades_lejanas,df_max)
+            
+            self.distancia_final_min = (df_min.loc[self.ruta_min[-1],ciudad_origen_min])
+            self.distancia_final_max = (df_max.loc[self.ruta_max[-1],ciudad_origen_max])
+            
+            
+            
         else:
-            self.ruta_min.append(origen)
-
-            return origen
-        
+            
+            self.ruta_min.append(ciudad_origen_min)
+            self.ruta_max.append(ciudad_origen_max)
+            
        
+    def reiniciar(self):
         
-        
-    def obtenerMax(self,origen,df):
-        
-        if(len(self.ciudades_max)!=1):
-            ciudad_origen = origen
-            ciudades_cercanas = df[ciudad_origen][(df[ciudad_origen] > 0)].idxmax()
-            print(f"La ciudad más lejana a {ciudad_origen} es {ciudades_cercanas}.")
-            # Mostrar las distancias entre dos ciudades
-            distancia_AB = df.loc[ciudad_origen, ciudades_cercanas]
-            print(f"Distancia entre Ciudad A y Ciudad B: {distancia_AB} km")
-                    
-            self.ciudades_max.remove(ciudad_origen)
-            self.ruta_max.append(ciudad_origen)
-            self.distancias_max.append(distancia_AB)
-
-                    
-            df = df.drop(ciudad_origen,axis='index')
-            
-            a = self.obtenerMax(ciudades_cercanas,df)
-            
-            self.distancia_final_max = (df.loc[self.ruta_max[-1],ciudad_origen])
-            return a
-        else:
-            self.ruta_max.append(origen)
-
-            return origen
-    def minimo(self, origen):
-        # Cargar los datos desde el archivo Excel
-        df = pd.read_excel('code/Others/Distances.xlsx', header=0, index_col=0)
-        ciudad_final = self.obtenerMin(origen,df)
-        print(ciudad_final)
-        print("ruta minimo",self.ruta_min)
-        
-        return self.ruta_min
+        self.ciudades_min = self.ciudades.copy()
+        self.ciudades_max = self.ciudades.copy()
         
 
-    def maximo(self, origen):
-        # Cargar los datos desde el archivo Excel
-        df = pd.read_excel('code/Others/Distances.xlsx', header=0, index_col=0)
-        ciudad_final = self.obtenerMax(origen,df)
-        print(ciudad_final)
-        print("ruta maximo",self.ruta_max)
+        self.ruta_min = []
+        self.ruta_max = []
         
-        return self.ruta_max
+        self.distancias_min = []
+        self.distancias_max = []
+        self.distancia_final_min=""
+        self.distancia_final_max=""
+        
+        self.mensaje_min=""
+        self.mensaje_max=""
+        
+        self.dis_min = []
+        self.dis_max = []
+        
+    
+        
+    def iniciar(self,eleccion):
+        
+        df_min = pd.read_excel('code/Others/Distances.xlsx', header=0, index_col=0)
+        df_max = pd.read_excel('code/Others/Distances.xlsx', header=0, index_col=0)
+        
+        self.obtencionDistancias(eleccion ,df_min,eleccion,df_max)
+        
+        self.mensaje_min += (f"De la ultima ciudad que es {self.ruta_min[-1]} nos regresamos a la ciudad de partida que es {eleccion} con {self.distancia_final_min} Km de distancia\n\n")
+        self.mensaje_max +=(f"De la ultima ciudad que es  {self.ruta_max[-1]} nos regresamos a la ciudad de partida que es {eleccion} con {self.distancia_final_max} Km de distancia\n\n")
+        
+        self.dis_min = self.distancias_min.copy()
+        self.dis_max = self.distancias_max.copy()
+        
+        self.dis_min.append(self.distancia_final_min)
+        self.dis_max.append(self.distancia_final_max)
+        
+        self.mensaje_min +=(f"La distancia total es: {sum(self.dis_min)}")
+        self.mensaje_max +=(f"La distancia total es: {sum(self.dis_max)}")
+        
+        
         
