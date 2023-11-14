@@ -7,8 +7,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 class ViewSecundary:
     def __init__(self):
         # Crea un grafo vacío
-        self.G_min = nx.Graph()
-        self.G_max = nx.Graph()
+        self.G = nx.Graph()
         self.fig = None
         
         # Agrega nodos que representen ciudades o estados
@@ -28,46 +27,29 @@ class ViewSecundary:
         self.add_city("Culiacán", 1.700, 0.020)
         self.add_city("Acapulco de Juárez", 2.710,-1.140)
 
-        self.pos = nx.get_node_attributes(self.G_min, 'pos')
-        self.pos = nx.get_node_attributes(self.G_max, 'pos')
+        self.pos = nx.get_node_attributes(self.G, 'pos')
         
         self.background_image = plt.imread("Code/Others/Images/republica.jpg")
        
         print("Imagen cargada correctamente")
 
     def add_city(self, name, x, y):
-        self.G_min.add_node(name, pos=(x, y))
-        self.G_max.add_node(name, pos=(x, y))
-   
-    def generate_lines_min(self, cityA, cityB, text):
-        self.G_min.add_edge(cityA, cityB,line_width=1, label=text)  
-
-    def generate_lines_max(self, cityA, cityB,text):
-        self.G_max.add_edge(cityA, cityB,line_width=1,label=text)
+        self.G.add_node(name,pos=(x, y))
         
-     
-
-    def draw_graph_in_figure_min(self, G):
+    def generate_lines(self, cityA, cityB,text):
+        self.G.add_edge(cityA, cityB,line_width=1,label=text)
+            
+    def draw_graph_in_figure(self, G):
         self.fig, ax = plt.subplots()
+        ax.set_facecolor('#ffc700')
         ax.imshow(self.background_image, extent=[0, 5, -2, 2])
-        edge_labels = nx.get_edge_attributes(self.G_min, 'label')
-        nx.draw(self.G_min, self.pos, with_labels=True, node_color='blue', node_size=12, font_size=5, font_color='black', edge_color='g')
-        nx.draw_networkx_edge_labels(self.G_min, self.pos, edge_labels=edge_labels, font_size=6, font_color='red')
+        edge_labels = nx.get_edge_attributes(self.G, 'label')
+        nx.draw(self.G, self.pos, with_labels=True, node_color='blue', node_size=12, font_size=5, font_color='black', edge_color='r')
+        nx.draw_networkx_edge_labels(self.G, self.pos, edge_labels=edge_labels, font_size=6, font_color='red')
         return self.fig
 
-    def draw_graph_in_figure_max(self, G):
-        self.fig, ax = plt.subplots()
-        ax.imshow(self.background_image, extent=[0, 5, -2, 2])
-        edge_labels = nx.get_edge_attributes(self.G_max, 'label')
-        nx.draw(self.G_max, self.pos, with_labels=True, node_color='blue', node_size=12, font_size=5, font_color='black', edge_color='r')
-        nx.draw_networkx_edge_labels(self.G_max, self.pos, edge_labels=edge_labels, font_size=6, font_color='red')
-        return self.fig
-
-    def get_graph_min(self):
-        return self.G_min
-
-    def get_graph_max(self):
-        return self.G_max
+    def get_graph(self):
+        return self.G
     
     def close_figures(self):
         plt.close('all')
